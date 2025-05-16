@@ -72,6 +72,78 @@ class Program
         File.WriteAllText("laporan.csv", reportOutput);
         Console.WriteLine("\n>> Laporan disimpan ke 'laporan.csv'");
 
+Console.Write("Set username untuk user baru: ");
+            string username = Console.ReadLine();
+
+            Console.Write("Set password untuk user baru: ");
+            string password = ReadPassword();
+
+            var user = new User
+            {
+                Username = username,
+                PasswordHashWithSalt = PasswordHasher.HashPassword(password)
+            };
+
+            Console.WriteLine("\n\n-- Simulasi Login --");
+
+            var fsm = new LoginStateMachine(user);
+
+            while (fsm.CurrentState != LoginState.Authenticated && fsm.CurrentState != LoginState.Locked)
+            {
+                Console.Write("\nMasukkan username: ");
+                string inputUser = Console.ReadLine();
+
+                Console.Write("Masukkan password: ");
+                string inputPass = ReadPassword();
+
+                try
+                {
+                    bool success = fsm.ProvideCredentials(inputUser, inputPass);
+
+                    if (success)
+                    {
+                        Console.WriteLine("\n Login berhasil! Anda telah masuk.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\n Login gagal. Status sekarang: {fsm.CurrentState}");
+                        if (fsm.CurrentState == LoginState.Locked)
+                            Console.WriteLine(" Akun terkunci setelah 3 kali percobaan.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Error] {ex.Message}");
+                }
+            }
+        }
+
+        // Fungsi input password tidak terlihat di layar
+        static string ReadPassword()
+        {
+            string pass = "";
+            ConsoleKey key;
+            do
+            {
+                var keyInfo = Console.ReadKey(intercept: true);
+                key = keyInfo.Key;
+
+                if (key == ConsoleKey.Backspace && pass.Length > 0)
+                {
+                    Console.Write("\b \b");
+                    pass = pass[0..^1];
+                }
+                else if (!char.IsControl(keyInfo.KeyChar))
+                {
+                    Console.Write("*");
+                    pass += keyInfo.KeyChar;
+                }
+            } while (key != ConsoleKey.Enter);
+            Console.WriteLine();
+
+            return pass;
+
+
     }
 
 }
