@@ -6,17 +6,48 @@ using Microsoft.Extensions.Configuration;
 using PMB.Models;
 using PMB.Reporting;
 
-
 class Program
 {
     static void Main(string[] args)
     {
         // Load konfigurasi dari appsettings.json
+        var config = new ConfigurationBuilder()
         var configBuilder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json");
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
         var configuration = configBuilder.Build();
+        
+        var quotaConfig = config.Get<QuotaConfig>();
 
+        
+        var ruleLoader = new DepartmentRuleLoader();
+        var rules = ruleLoader.LoadRules();
+
+        var validator = new DepartmentRuleValidator(rules);
+        var quotaService = new DepartmentQuotaService(quotaConfig);
+         var applicant = new Applicant
+        {
+            Name = "Budi",
+            SchoolOrigin = "SMA",
+            MathScore = 85
+        };
+
+        string departmentId = "CS";
+
+        Console.WriteLine($"Validasi untuk pendaftar {applicant.Name} ke jurusan {departmentId}...");
+        
+        if (validator.IsValid(applicant, departmentId))
+        {
+            if (quotaService.IsQuotaAvailable(departmentId))
+                Console.WriteLine(" Pendaftar diterima!");
+            else
+                Console.WriteLine(" Kuota jurusan habis.");
+        }
+        else
+        {
+            Console.WriteLine(" Pendaftar tidak memenuhi syarat jurusan.");
+        }
+        
         var formatConfig = configuration.GetSection("ReportFormat").Get<ReportFormatConfig>();
 
         // Load data
@@ -40,9 +71,6 @@ class Program
         // Simpan ke file
         File.WriteAllText("laporan.csv", reportOutput);
         Console.WriteLine("\n>> Laporan disimpan ke 'laporan.csv'");
-
-
-
 
     }
 
