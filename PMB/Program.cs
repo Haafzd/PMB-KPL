@@ -1,25 +1,29 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration;
 
 using PMB.Models;
 using PMB.Reporting;
+using PMB.Services;
+using PMB.Security;
+using PMB.StateMachine;
+
 
 class Program
 {
     static void Main(string[] args)
     {
         // Load konfigurasi dari appsettings.json
-        var config = new ConfigurationBuilder()
+        var config = new ConfigurationBuilder();
         var configBuilder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
         var configuration = configBuilder.Build();
-        
-        var quotaConfig = config.Get<QuotaConfig>();
 
-        
+        var quotaConfig = configuration.Get<QuotaConfig>();
+
+
+
         var ruleLoader = new DepartmentRuleLoader();
         var rules = ruleLoader.LoadRules();
 
