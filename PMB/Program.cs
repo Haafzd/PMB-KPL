@@ -26,7 +26,7 @@ class Program
 
         var applicant = new Applicant
         {
-            Name = "ucup",
+            Name = "Budi",
             SchoolOrigin = "SMA",
             MathScore = 85
         };
@@ -38,13 +38,13 @@ class Program
         if (validator.IsValid(applicant, departmentId))
         {
             if (quotaService.IsQuotaAvailable(departmentId))
-                Console.WriteLine("✅ Pendaftar diterima!");
+                Console.WriteLine(" Pendaftar diterima!");
             else
-                Console.WriteLine("❌ Kuota jurusan habis.");
+                Console.WriteLine(" Kuota jurusan habis.");
         }
         else
         {
-            Console.WriteLine("❌ Pendaftar tidak memenuhi syarat jurusan.");
+            Console.WriteLine(" Pendaftar tidak memenuhi syarat jurusan.");
         }
     }
 }
