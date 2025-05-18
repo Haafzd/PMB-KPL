@@ -11,11 +11,11 @@ namespace PMB.Tests
     [TestClass]
     public class LoginStateMachineTests
     {
-        private User CreateTestUser(string username, string password)
+        private User CreateTestUser(string email, string password)
         {
             return new User
             {
-                Username = username,
+              Email = email,
                 PasswordHashWithSalt = PasswordHasher.HashPassword(password)
             };
         }

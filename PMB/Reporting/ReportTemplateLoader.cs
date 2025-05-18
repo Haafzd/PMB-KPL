@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PMB.Reporting
 {
-    public static class ReportTemplateLoader
+    public  class ReportTemplateLoader
     {
-        public static List<ReportColumnDefinition> LoadTemplate()
+        public List<ReportColumnDefinition> LoadTemplate()
         {
             return new List<ReportColumnDefinition>
             {
