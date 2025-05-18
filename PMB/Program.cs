@@ -77,14 +77,14 @@ class Program
         Console.WriteLine("\n>> Laporan disimpan ke 'laporan.csv'");
 
 Console.Write("Set username untuk user baru: ");
-            string username = Console.ReadLine();
+            string email = Console.ReadLine();
 
             Console.Write("Set password untuk user baru: ");
             string password = ReadPassword();
 
             var user = new User
             {
-                Username = username,
+                Email = email,
                 PasswordHashWithSalt = PasswordHasher.HashPassword(password)
             };
 
