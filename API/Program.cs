@@ -1,18 +1,43 @@
-// PMB-API/Program.cs
+// Program.cs
 using API.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using PMB.Models;
 using PMB.Reporting;
 using PMB.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<DepartmentQuotaService>();
+// Konfigurasi settings
+builder.Services.Configure<QuotaConfig>(builder.Configuration.GetSection("QuotaConfig"));
+builder.Services.Configure<ReportFormatConfig>(builder.Configuration.GetSection("ReportFormat"));
+
+// Registrasi services
+builder.Services.AddScoped<DepartmentQuotaService>(provider =>
+    new DepartmentQuotaService(provider.GetRequiredService<IOptions<QuotaConfig>>().Value));
+
+builder.Services.AddScoped<ReportGenerator>(provider =>
+    new ReportGenerator(provider.GetRequiredService<IOptions<ReportFormatConfig>>().Value));
+
+// Registrasi PaymentProcessor dengan factory
+builder.Services.AddScoped<PaymentProcessor<BankTransferPayment>>(provider =>
+    new PaymentProcessor<BankTransferPayment>(new BankTransferPayment("")));
+
+// Registrasi dependencies lainnya
 builder.Services.AddScoped<DepartmentRuleLoader>();
-builder.Services.AddScoped<ReportGenerator>();
-builder.Services.AddScoped<ReportTemplateLoader>();
+builder.Services.AddDbContext<AppDbContext>();
 
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Middleware pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

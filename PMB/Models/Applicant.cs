@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PMB.Models
+﻿namespace PMB.Models
 {
+    /// Model data untuk menyimpan informasi pelamar
     public class Applicant
     {
-        public string Name { get; set; }
-        public string SchoolOrigin { get; set; }
-        public int MathScore { get; set; }
+        public string Name { get; set; }         // Nama lengkap pelamar
+        public string SchoolOrigin { get; set; }  // Asal sekolah
+        public int MathScore { get; set; }       // Nilai ujian matematika
+        public string BankAccount { get; set; }  // Nomor rekening bank
     }
 }

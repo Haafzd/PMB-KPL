@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// PMB/Security/PasswordHasher.cs
+using System;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PMB.Security
 {
+    /// Helper untuk enkripsi dan validasi password
     public class PasswordHasher
     {
+        /// Membuat hash password dengan salt
         public static string HashPassword(string password)
         {
             using var rng = RandomNumberGenerator.Create();
@@ -25,10 +24,10 @@ namespace PMB.Security
             return Convert.ToBase64String(hashBytes);
         }
 
+        /// Memverifikasi password dengan hash yang tersimpan
         public static bool VerifyPassword(string password, string storedHash)
         {
             byte[] hashBytes = Convert.FromBase64String(storedHash);
-
             byte[] salt = new byte[16];
             Array.Copy(hashBytes, 0, salt, 0, 16);
 

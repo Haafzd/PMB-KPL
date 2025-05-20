@@ -11,7 +11,6 @@ namespace PMB.Models
     
     public class CreditCardPayment : IPaymentMethod
     {
-        private string cardNumber;
         public string CardNumber { get; }
 
         public CreditCardPayment(string cardNumber)

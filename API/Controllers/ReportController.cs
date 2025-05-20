@@ -12,21 +12,20 @@ namespace API
     public class ReportController : ControllerBase
     {
         private readonly ReportGenerator _reportGenerator;
-        private readonly ReportTemplateLoader _templateLoader;
 
-        public ReportController(ReportGenerator reportGenerator, ReportTemplateLoader templateLoader)
+        // Remove templateLoader from constructor
+        public ReportController(ReportGenerator reportGenerator)
         {
             _reportGenerator = reportGenerator;
-            _templateLoader = templateLoader;
         }
 
-        // POST: api/report/generate
         [HttpPost("generate")]
         public ActionResult<string> GenerateReport([FromBody] List<StudentReportData> data)
         {
             try
             {
-                var template = _templateLoader.LoadTemplate();
+                // Call static method directly
+                var template = ReportTemplateLoader.LoadTemplate();
                 var config = new ReportFormatConfig
                 {
                     Separator = ",",
