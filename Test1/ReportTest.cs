@@ -8,7 +8,7 @@ using System;
 namespace PMB.Tests
 {
     [TestClass]
-    public class test
+    public class ReportTest
     {
         [TestMethod]
         public void GenerateReport_WithValidDataAndHeader_ShouldIncludeHeaderRow()

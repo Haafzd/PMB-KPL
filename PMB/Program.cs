@@ -29,7 +29,8 @@ class Program
 
         var validator = new DepartmentRuleValidator(rules);
         var quotaService = new DepartmentQuotaService(quotaConfig);
-         var applicant = new Applicant
+
+        var applicant = new Applicant
         {
             Name = "Budi",
             SchoolOrigin = "SMA",
