@@ -11,57 +11,63 @@ namespace PMB.Reporting
     public class ReportGenerator
     {
         private readonly ReportFormatConfig _config;
+        private readonly ReportStateMachine _stateMachine;
 
         public ReportGenerator(ReportFormatConfig config)
         {
             _config = config ?? throw new ArgumentNullException(nameof(config));
+            _stateMachine = new ReportStateMachine();
         }
 
         public string GenerateReport(List<StudentReportData> data, List<ReportColumnDefinition> template)
         {
-            // === PRECONDITIONS ===
-            if (data == null) throw new ArgumentNullException(nameof(data), "Data tidak boleh null.");
+            _stateMachine.Fire(ReportTrigger.StartGeneration);
+
+            if (data == null) throw new ArgumentNullException(nameof(data));
             if (template == null || !template.Any()) throw new ArgumentException("Template tidak boleh kosong.");
             if (_config.Separator == null) throw new ArgumentException("Separator harus dikonfigurasi.");
 
-            // Validasi setiap DataPropertyName ada di StudentReportData
             var props = typeof(StudentReportData).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var column in template)
             {
                 if (!props.Any(p => p.Name == column.DataPropertyName))
                 {
-                    throw new ArgumentException($"Properti {column.DataPropertyName} tidak ditemukan dalam StudentReportData.");
+                    _stateMachine.Fire(ReportTrigger.ValidationFailed);
+                    throw new ArgumentException($"Properti {column.DataPropertyName} tidak ditemukan.");
                 }
             }
 
-            // === PROSES LAPORAN ===
-            var output = new List<string>();
+            _stateMachine.Fire(ReportTrigger.ValidationSuccess);
 
+            var output = new List<string>();
             if (_config.UseHeader)
             {
-                var headers = template.Select(t => t.HeaderName);
-                output.Add(string.Join(_config.Separator, headers));
+                output.Add(string.Join(_config.Separator, template.Select(t => t.HeaderName)));
             }
 
-            foreach (var item in data)
+            try
             {
-                var row = template.Select(t =>
+                foreach (var item in data)
                 {
-                    var prop = props.First(p => p.Name == t.DataPropertyName);
-                    var value = prop.GetValue(item)?.ToString() ?? "";
-                    return value;
-                });
+                    var row = template.Select(t =>
+                    {
+                        var prop = props.First(p => p.Name == t.DataPropertyName);
+                        return prop.GetValue(item)?.ToString() ?? "";
+                    });
+                    output.Add(string.Join(_config.Separator, row));
+                }
 
-                output.Add(string.Join(_config.Separator, row));
+                _stateMachine.Fire(ReportTrigger.GenerationSuccess);
+            }
+            catch
+            {
+                _stateMachine.Fire(ReportTrigger.GenerationFailed);
+                throw;
             }
 
             var result = string.Join(Environment.NewLine, output);
-
-            // === POSTCONDITION ===
             if (string.IsNullOrWhiteSpace(result)) throw new InvalidOperationException("Output laporan tidak boleh kosong.");
-
             return result;
         }
     }
-
 }
