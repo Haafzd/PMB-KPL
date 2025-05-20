@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 
 using PMB.Models;
+using PMB.Services;
 using PMB.Reporting;
 using PMB.Services;
 using PMB.Security;
@@ -13,6 +14,8 @@ class Program
 {
     static void Main(string[] args)
     {
+
+        try
         // Load konfigurasi dari appsettings.json
         var config = new ConfigurationBuilder();
         var configBuilder = new ConfigurationBuilder()
@@ -32,25 +35,17 @@ class Program
 
         var applicant = new Applicant
         {
-            Name = "Budi",
-            SchoolOrigin = "SMA",
-            MathScore = 85
-        };
+            var creditCardPayment = new CreditCardPayment("1234567812345678");
+            var creditProcessor = new PaymentProcessor<CreditCardPayment>(creditCardPayment);
+            creditProcessor.ExecutePayment(1000m);
 
-        string departmentId = "CS";
-
-        Console.WriteLine($"Validasi untuk pendaftar {applicant.Name} ke jurusan {departmentId}...");
-        
-        if (validator.IsValid(applicant, departmentId))
-        {
-            if (quotaService.IsQuotaAvailable(departmentId))
-                Console.WriteLine(" Pendaftar diterima!");
-            else
-                Console.WriteLine(" Kuota jurusan habis.");
+            var bankTransferPayment = new BankTransferPayment("9876543210");
+            var bankProcessor = new PaymentProcessor<BankTransferPayment>(bankTransferPayment);
+            bankProcessor.ExecutePayment(500m);
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine(" Pendaftar tidak memenuhi syarat jurusan.");
+            Console.WriteLine($"Error: {ex.Message}");
         }
         
         var formatConfig = configuration.GetSection("ReportFormat").Get<ReportFormatConfig>();
@@ -77,15 +72,15 @@ class Program
         File.WriteAllText("laporan.csv", reportOutput);
         Console.WriteLine("\n>> Laporan disimpan ke 'laporan.csv'");
 
-Console.Write("Set username untuk user baru: ");
-            string username = Console.ReadLine();
+        Console.Write("Set username untuk user baru: ");
+            string email = Console.ReadLine();
 
             Console.Write("Set password untuk user baru: ");
             string password = ReadPassword();
 
             var user = new User
             {
-                Username = username,
+                Email = email,
                 PasswordHashWithSalt = PasswordHasher.HashPassword(password)
             };
 
@@ -148,7 +143,5 @@ Console.Write("Set username untuk user baru: ");
 
             return pass;
 
-
     }
-
 }

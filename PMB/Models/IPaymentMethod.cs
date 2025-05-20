@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace PMB.Models
 {
-    public class User
+    public interface IPaymentMethod
     {
-        public string Email { get; set; }
-        public string PasswordHashWithSalt { get; set; }
+        bool ProcessPayment(decimal amount);
     }
 
 }
