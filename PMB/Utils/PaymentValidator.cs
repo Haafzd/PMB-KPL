@@ -19,8 +19,5 @@ namespace PMB.Utils
 
             return cardNumber != null && cardNumber.Length == 16 && cardNumber.All(char.IsDigit);
         }
-
     }
-
-
 }

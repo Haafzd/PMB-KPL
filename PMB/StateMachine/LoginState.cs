@@ -15,5 +15,3 @@ namespace PMB.StateMachine
         Locked
     }
 }
-
-    

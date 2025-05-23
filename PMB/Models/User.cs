@@ -11,5 +11,4 @@ namespace PMB.Models
         public string Email { get; set; }
         public string PasswordHashWithSalt { get; set; }
     }
-
 }

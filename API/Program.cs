@@ -1,5 +1,5 @@
 // Program.cs
-using API.Data;
+using API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PMB.Models;
@@ -13,8 +13,9 @@ builder.Services.Configure<QuotaConfig>(builder.Configuration.GetSection("QuotaC
 builder.Services.Configure<ReportFormatConfig>(builder.Configuration.GetSection("ReportFormat"));
 
 // Registrasi services
-builder.Services.AddScoped<DepartmentQuotaService>(provider =>
-    new DepartmentQuotaService(provider.GetRequiredService<IOptions<QuotaConfig>>().Value));
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<QuotaConfig>>().Value);
+builder.Services.AddScoped<DepartmentQuotaService>();
+
 
 builder.Services.AddScoped<ReportGenerator>(provider =>
     new ReportGenerator(provider.GetRequiredService<IOptions<ReportFormatConfig>>().Value));

@@ -14,6 +14,4 @@ namespace PMB.Models
             public string Name { get; set; }
         }
     }
-
-
 }

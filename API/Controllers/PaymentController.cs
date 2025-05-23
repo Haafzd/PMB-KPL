@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PMB.Services;
 using PMB.Models;
+using PMB.Services;
 using System.Linq;
 
-namespace API {
+namespace API
+{
 
     // PMB-API/Controllers/PaymentController.cs
     [ApiController]

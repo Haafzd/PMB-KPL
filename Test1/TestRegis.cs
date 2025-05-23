@@ -24,11 +24,7 @@ namespace Test1
         public void Register_WithMatchingPasswords_ReturnsOk()
         {
             var registration = new Registration(
-                "Test User",
                 "test@example.com",
-                "1234567890",
-                "123 Test St",
-                "2000-01-01",
                 "password123",
                 "password123"
             );
@@ -45,11 +41,7 @@ namespace Test1
         public void Register_WithNonMatchingPasswords_ReturnsBadRequest()
         {
             var registration = new Registration(
-                "Test User",
                 "test@example.com",
-                "1234567890",
-                "123 Test St",
-                "2000-01-01",
                 "password123",
                 "passwordBeda"
             );
@@ -69,11 +61,7 @@ namespace Test1
             _users.Add(new User { Email = existingEmail });
 
             var registration = new Registration(
-                "Test User",
                 existingEmail,
-                "1234567890",
-                "123 Test St",
-                "2000-01-01",
                 "password123",
                 "password123"
             );
@@ -90,11 +78,7 @@ namespace Test1
         public void Register_ValidRequest_SavesUserToList()
         {
             var registration = new Registration(
-                "Test User",
                 "test@example.com",
-                "1234567890",
-                "123 Test St",
-                "2000-01-01",
                 "password123",
                 "password123"
             );
@@ -111,11 +95,7 @@ namespace Test1
         public void Register_ValidRequest_ChangesStateToRegistered()
         {
             var registration = new Registration(
-                "Test User",
                 "test@example.com",
-                "1234567890",
-                "123 Test St",
-                "2000-01-01",
                 "password123",
                 "password123"
             );

@@ -29,5 +29,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\PMB\PMB.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Data\" />
+	</ItemGroup>
 
 </Project>

@@ -28,6 +28,4 @@ namespace PMB.Models
             return true; // misal pembayaran berhasil
         }
     }
-
-
 }

@@ -4,6 +4,7 @@ using API;
 using System.Collections.Generic;
 using System.Linq;
 using PMB.Models;
+using PMB.Services;
 
 namespace API
 {
@@ -38,7 +39,6 @@ namespace API
                 Email = registration.email,
                 PasswordHashWithSalt = registration.NewPassword
             };
-
             _users.Add(user);
 
             return Ok("Registration successful.");

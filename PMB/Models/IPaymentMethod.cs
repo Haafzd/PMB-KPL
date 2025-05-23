@@ -10,5 +10,4 @@ namespace PMB.Models
     {
         bool ProcessPayment(decimal amount);
     }
-
 }

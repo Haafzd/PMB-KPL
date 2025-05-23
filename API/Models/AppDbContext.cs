@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PMB.Models;
 
-namespace API.Data
+namespace API.Models
 {
     public class AppDbContext : DbContext
     {

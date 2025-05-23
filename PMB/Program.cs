@@ -227,7 +227,14 @@ class Program
             var config = new ReportFormatConfig { Separator = ",", UseHeader = true };
             var generator = new ReportGenerator(config);
 
-            var output = generator.GenerateReport(new List<StudentReportData>(), template);
+            // Masukkan data student ke dalam list
+            var dataMahasiswa = new List<StudentReportData>
+        {
+            new StudentReportData { Name = "aden", NIM = "120220001", Major = "Software Engineering", Year = 2024 },
+            new StudentReportData { Name = "jajang", NIM = "120220002", Major = "Data Science", Year = 2021 }
+        };
+
+            var output = generator.GenerateReport(dataMahasiswa, template);
             File.WriteAllText("laporan.csv", output);
 
             TampilkanPesanSukses("Laporan berhasil di-generate (laporan.csv)");

@@ -1,4 +1,4 @@
-﻿using API.Data;
+﻿using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PMB.Models;
@@ -23,7 +23,7 @@ namespace API
         [HttpGet]
         public ActionResult<IEnumerable<Applicant>> GetApplicants()
         {
-            return _context.Applicants.ToList();
+            return ((DbSet<PMB.Models.Applicant>)_context.Applicants).ToList();
         }
 
         // POST: Membuat data pelamar baru

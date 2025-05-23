@@ -16,7 +16,11 @@ namespace PMB.Services
         /// Mengecek ketersediaan kuota untuk jurusan tertentu
         public bool IsQuotaAvailable(string departmentId)
         {
-            return _quotaConfig.CourseQuotas.TryGetValue(departmentId, out var quota) && quota > 0;
+            return _quotaConfig.CourseQuotas.ContainsKey(departmentId) &&
+                   _quotaConfig.CourseQuotas[departmentId] > 0;
         }
+
+        public Dictionary<string, int> GetCurrentQuotas() =>
+            new Dictionary<string, int>(_quotaConfig.CourseQuotas);
     }
 }
