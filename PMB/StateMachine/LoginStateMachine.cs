@@ -1,54 +1,43 @@
-﻿using PMB.Models;
-using PMB.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using API.Models;
+using Lib.StateMachine;
+using Lib.Utils;
 
-namespace PMB.StateMachine
+namespace API.Services
 {
     public class LoginStateMachine
     {
-        public LoginState CurrentState { get; private set; } = LoginState.NotLoggedIn;
+        public LoginState CurrentState { get; private set; }
         private readonly User _user;
-        private int failedAttempts = 0;
+        private int _failedAttempts;
         private const int MaxAttempts = 3;
 
         public LoginStateMachine(User user)
         {
-            _user = user ?? throw new ArgumentNullException(nameof(user));
+            _user = user ?? throw new ArgumentNullException("User tidak valid");
+            CurrentState = LoginState.NotLoggedIn;
         }
 
-        public bool ProvideCredentials(string username, string password)
+        // Proses validasi kredensial
+        public bool ProvideCredentials(string email, string password)
         {
             if (CurrentState == LoginState.Locked)
-                throw new InvalidOperationException("User is locked.");
+                throw new InvalidOperationException("Akun terkunci");
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                throw new ArgumentException("Username or password is empty.");
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+                throw new ArgumentException("Email dan password harus diisi");
 
             CurrentState = LoginState.WaitingCredentials;
 
-            if (_user.Username == username &&
-                PasswordHasher.VerifyPassword(password, _user.PasswordHashWithSalt))
+            if (_user.Email == email && PasswordHasher.VerifyPassword(password, _user.PasswordHashWithSalt))
             {
                 CurrentState = LoginState.Authenticated;
                 return true;
             }
 
-            failedAttempts++;
-            if (failedAttempts >= MaxAttempts)
-            {
-                CurrentState = LoginState.Locked;
-            }
-            else
-            {
-                CurrentState = LoginState.Failed;
-            }
+            _failedAttempts++;
+            CurrentState = _failedAttempts >= MaxAttempts ? LoginState.Locked : LoginState.Failed;
 
             return false;
         }
     }
-
 }
