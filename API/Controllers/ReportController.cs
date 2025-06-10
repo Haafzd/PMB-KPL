@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PMB.Models;
-using PMB.Reporting;
-using System.Linq;
+using API.Models.Reporting;
+using API.Services;
+using API.Models;
 
-namespace API 
+namespace API.Controllers
 {
-
-    // PMB-API/Controllers/ReportController.cs
     [ApiController]
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
         private readonly ReportGenerator _reportGenerator;
 
-        // Remove templateLoader from constructor
         public ReportController(ReportGenerator reportGenerator)
         {
             _reportGenerator = reportGenerator;
@@ -24,14 +21,15 @@ namespace API
         {
             try
             {
-                // Call static method directly
                 var template = ReportTemplateLoader.LoadTemplate();
                 var config = new ReportFormatConfig
                 {
                     Separator = ",",
                     UseHeader = true
                 };
-                return _reportGenerator.GenerateReport(data, template);
+
+                // PERBAIKAN 1: Teruskan config ke generator
+                return _reportGenerator.GenerateReport(data, template, config);
             }
             catch (Exception ex)
             {
@@ -39,5 +37,4 @@ namespace API
             }
         }
     }
-
 }

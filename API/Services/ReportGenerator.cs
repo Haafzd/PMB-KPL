@@ -1,27 +1,29 @@
-﻿using PMB.Models;
-using System.Reflection;
-using PMB.StateMachine;
+﻿using System.Reflection;
+using API.Models;
+using API.Models.Reporting;
+using API.Models.StateMachine;
 
-namespace PMB.Reporting
+namespace API.Services
 {
     public class ReportGenerator
     {
-        private readonly ReportFormatConfig _config;
         private readonly ReportStateMachine _stateMachine;
 
-        public ReportGenerator(ReportFormatConfig config)
+        public ReportGenerator()
         {
-            _config = config ?? throw new ArgumentNullException(nameof(config));
             _stateMachine = new ReportStateMachine();
         }
 
-        public string GenerateReport(List<StudentReportData> data, List<ReportColumnDefinition> template)
+        public string GenerateReport(
+            List<StudentReportData> data,
+            List<ReportColumnDefinition> template,
+            ReportFormatConfig config) 
         {
             _stateMachine.Fire(ReportTrigger.StartGeneration);
 
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (template == null || !template.Any()) throw new ArgumentException("Template tidak boleh kosong.");
-            if (_config.Separator == null) throw new ArgumentException("Separator harus dikonfigurasi.");
+            if (config.Separator == null) throw new ArgumentException("Separator harus dikonfigurasi.");
 
             var props = typeof(StudentReportData).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var column in template)
@@ -36,9 +38,9 @@ namespace PMB.Reporting
             _stateMachine.Fire(ReportTrigger.ValidationSuccess);
 
             var output = new List<string>();
-            if (_config.UseHeader)
+            if (config.UseHeader)
             {
-                output.Add(string.Join(_config.Separator, template.Select(t => t.HeaderName)));
+                output.Add(string.Join(config.Separator, template.Select(t => t.HeaderName)));
             }
 
             try
@@ -50,7 +52,7 @@ namespace PMB.Reporting
                         var prop = props.First(p => p.Name == t.DataPropertyName);
                         return prop.GetValue(item)?.ToString() ?? "";
                     });
-                    output.Add(string.Join(_config.Separator, row));
+                    output.Add(string.Join(config.Separator, row));
                 }
 
                 _stateMachine.Fire(ReportTrigger.GenerationSuccess);

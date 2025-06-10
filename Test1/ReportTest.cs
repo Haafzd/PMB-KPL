@@ -1,7 +1,6 @@
-﻿
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PMB.Models;
-using PMB.Reporting;
+﻿using API.Models;
+using API.Models.Reporting;
+using API.Services;
 
 using System;
 
@@ -31,10 +30,10 @@ namespace PMB.Tests
                 UseHeader = true
             };
 
-            var generator = new ReportGenerator(config);
+            var generator = new ReportGenerator();
 
             // Act
-            string result = generator.GenerateReport(data, template);
+            string result = generator.GenerateReport(data, template, config);
 
             // Assert
             StringAssert.StartsWith(result, "Nama,NIM");
