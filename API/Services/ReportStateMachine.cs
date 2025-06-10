@@ -1,6 +1,6 @@
-﻿using PMB.StateMachine;
+﻿using API.Models.StateMachine;
 
-namespace PMB.Reporting
+namespace API.Services
 {
     public class ReportStateMachine
     {
@@ -40,5 +40,4 @@ namespace PMB.Reporting
             }
         }
     }
-
 }

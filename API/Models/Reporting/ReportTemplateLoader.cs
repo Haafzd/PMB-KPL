@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PMB.Reporting
+﻿namespace API.Models.Reporting
 {
     public static class ReportTemplateLoader
     {
@@ -14,7 +8,8 @@ namespace PMB.Reporting
             {
                 new ReportColumnDefinition { HeaderName = "Nama", DataPropertyName = "Name", Order = 1 },
                 new ReportColumnDefinition { HeaderName = "Jurusan", DataPropertyName = "Major", Order = 2 },
-                new ReportColumnDefinition { HeaderName = "Angkatan", DataPropertyName = "Year", Order = 3 }
+                new ReportColumnDefinition { HeaderName = "Angkatan", DataPropertyName = "Year", Order = 3 },
+                new ReportColumnDefinition { HeaderName = "NIM", DataPropertyName = "NIM", Order = 4 }
             };
         }
     }
