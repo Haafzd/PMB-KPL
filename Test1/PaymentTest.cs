@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PMB.Models;
-using PMB.Services;
-using System;
+﻿using API.Services;
 
 namespace PMB.Tests
 {
@@ -15,7 +12,5 @@ namespace PMB.Tests
             bool result = payment.ProcessPayment(100m);
             Assert.IsTrue(result);
         }
-
-
     }
 }
