@@ -17,10 +17,6 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="PMBMenu.cs" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<!-- Paket untuk dependency injection (jika diperlukan) -->
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.5" />

@@ -1,9 +1,9 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PMB.Models;
-using System.Collections.Generic;
-using System.Linq;
+using API.Models;
 using Microsoft.AspNetCore.Mvc;
-using API;
+using API.Controllers;
+using API.Models.StateMachine;
+using API.Services;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace Test1
 {
@@ -11,12 +11,12 @@ namespace Test1
     public class RegistrationControllerTests
     {
         private RegistrationController _controller;
-        private List<User> _users;
+        private UserService _users;
 
         [TestInitialize]
         public void Setup()
         {
-            _users = new List<User>();
+            _users = new UserService();
             _controller = new RegistrationController(_users);
         }
 
@@ -34,7 +34,7 @@ namespace Test1
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             var okResult = result as OkObjectResult;
             Assert.AreEqual("Registration successful.", okResult.Value);
-            Assert.AreEqual(1, _users.Count);
+            Assert.AreEqual(1, _users.Users.Count());
         }
 
         [TestMethod]
@@ -51,14 +51,15 @@ namespace Test1
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
             var badRequestResult = result as BadRequestObjectResult;
             Assert.AreEqual("Passwords do not match.", badRequestResult.Value);
-            Assert.AreEqual(0, _users.Count);
+            Assert.AreEqual(0, _users.Users.Count());
+
         }
 
         [TestMethod]
         public void Register_WithExistingEmail_ReturnsBadRequest()
         {
             var existingEmail = "existing@example.com";
-            _users.Add(new User { Email = existingEmail });
+            _users.AddUser(new User { Email = existingEmail });
 
             var registration = new Registration(
                 existingEmail,
@@ -71,7 +72,7 @@ namespace Test1
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
             var badRequestResult = result as BadRequestObjectResult;
             Assert.AreEqual("Email already registered.", badRequestResult.Value);
-            Assert.AreEqual(1, _users.Count);
+            Assert.AreEqual(1, _users.Users.Count());
         }
 
         [TestMethod]
@@ -85,9 +86,9 @@ namespace Test1
 
             var result = _controller.Register(registration);
 
-            Assert.AreEqual(1, _users.Count);
-            var savedUser = _users.First();
-            Assert.AreEqual(registration.email, savedUser.Email);
+            Assert.AreEqual(1, _users.Users.Count());
+            var savedUser = _users.Users.First();
+            Assert.AreEqual(registration.Email, savedUser.Email);
             Assert.AreEqual(registration.NewPassword, savedUser.PasswordHashWithSalt);
         }
 
