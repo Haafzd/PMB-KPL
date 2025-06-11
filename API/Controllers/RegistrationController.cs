@@ -1,47 +1,50 @@
-﻿// Controllers/RegistrationController.cs
-using Microsoft.AspNetCore.Mvc;
-using API;
-using System.Collections.Generic;
-using System.Linq;
-using PMB.Models;
-using PMB.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using API.Models;
+using API.Services;
+using API.Models.StateMachine;
+using Lib.Utils;
+using Microsoft.AspNetCore.Identity;
 
-namespace API
+namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class RegistrationController : ControllerBase
     {
-        private readonly List<User> _users;
+        private readonly UserService _userService;
 
-        public RegistrationController(List<User> users)
+        public RegistrationController(UserService userService)
         {
-            _users = users;
+            _userService = userService;
         }
 
         [HttpPost]
         public IActionResult Register([FromBody] Registration registration)
         {
-            if (registration.NewPassword != registration.ReEnterPassword)
-            {
-                return BadRequest("Passwords do not match.");
-            }
-            if (_users.Any(u => u.Email == registration.email))
-            {
-                return BadRequest("Email already registered.");
-            }
+            if (string.IsNullOrWhiteSpace(registration.Email) ||
+                string.IsNullOrWhiteSpace(registration.NewPassword) ||
+                string.IsNullOrWhiteSpace(registration.ReEnterPassword))
+                return BadRequest("Semua field wajib diisi.");
 
-            // Transition state
-            registration.State = RegistrationState.Registered;
+            if (!InputHelper.ValidateEmail(registration.Email))
+                return BadRequest("Format email tidak valid.");
+
+            if (registration.NewPassword != registration.ReEnterPassword)
+                return BadRequest("Password tidak sama.");
+
+            if (_userService.Users.Any(u => u.Email == registration.Email))
+                return BadRequest("Email sudah terdaftar.");
 
             var user = new User
             {
-                Email = registration.email,
-                PasswordHashWithSalt = registration.NewPassword
+                Email = registration.Email,
+                PasswordHashWithSalt = PasswordHasher.HashPassword(registration.NewPassword)
             };
-            _users.Add(user);
 
-            return Ok("Registration successful.");
+            _userService.AddUser(user);
+            registration.State = RegistrationState.Registered;
+
+            return Ok("Registrasi berhasil.");
         }
     }
 }
