@@ -1,25 +1,12 @@
-﻿using API.Models;
-using API.Services;
-using Lib.Utils;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PMB
 {
-    public class PMBMenu
+    class Class1
     {
-        private static async Task HandleRegister()
-        {
-            var email = InputHelper.PromptRequired("Email: ");
-            if (!InputHelper.ValidateEmail(registration.Email)){
-                Console.WriteLine("Format email tidak valid.");
-                Console.ReadKey();
-                return;
-            }
-            var password = InputHelper.PromptRequired("Password: ");
-            var confirmPassword = InputHelper.PromptRequired("Ulangi Password: ");
-            var result = await _client.RegisterAsync(email, password, confirmPassword);
-
-            Console.WriteLine(result.IsSuccess ? "Registrasi berhasil!" : $"Gagal: {result.ErrorMessage}");
-            Console.ReadKey();
-        }
     }
 }
