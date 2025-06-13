@@ -1,0 +1,29 @@
+[
+  {
+    "DepartmentId": "CS",
+    "RequiredSubjects": {
+      "Mathematics": 80,
+      "Physics": 75
+    },
+    "RequiredSchoolType": "SMA",
+    "Fee": 1500000
+  },
+  {
+    "DepartmentId": "LIT",
+    "RequiredSubjects": {
+      "Literature": 85,
+      "History": 75
+    },
+    "RequiredSchoolType": "SMA",
+    "Fee": 1000000
+  },
+  {
+    "DepartmentId": "ENG",
+    "RequiredSubjects": {
+      "Mathematics": 70,
+      "English": 80
+    },
+    "RequiredSchoolType": "SMK",
+    "Fee": 1250000
+  }
+]

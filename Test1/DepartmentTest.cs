@@ -1,8 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PMB.Models;
-using PMB.Services;
-using System;
-using System.Collections.Generic;
+﻿using API.Models;
 
 namespace PMB.Tests
 {
