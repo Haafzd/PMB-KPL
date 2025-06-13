@@ -1,6 +1,4 @@
 using API.Services;
-using System;
-using System.Windows.Forms;
 
 namespace View
 {
@@ -43,5 +41,4 @@ namespace View
             new RegisterForm().Show();
         }
     }
-
 }

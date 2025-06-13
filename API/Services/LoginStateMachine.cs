@@ -16,7 +16,6 @@ namespace API.Services
             CurrentState = LoginState.NotLoggedIn;
         }
 
-        // Proses validasi kredensial
         public bool ProvideCredentials(string email, string password)
         {
             if (CurrentState == LoginState.Locked)

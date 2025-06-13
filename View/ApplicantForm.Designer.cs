@@ -2,15 +2,8 @@
 {
     partial class ApplicantForm
     {
-        /// <summary>
-        ///  Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
-        /// </summary>
         private TextBox txtName;
         private TextBox txtOrigin;
         private TextBox txtBank;
@@ -35,30 +24,65 @@
 
         private void InitializeComponent()
         {
-            txtName = new TextBox { PlaceholderText = "Nama", Location = new Point(20, 20), Width = 250 };
-            txtOrigin = new TextBox { PlaceholderText = "Asal Sekolah", Location = new Point(20, 60), Width = 250 };
-            cmbDepartment = new ComboBox { Location = new Point(20, 100), Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
-            txtBank = new TextBox { PlaceholderText = "Rekening/Kartu (16 digit)", Location = new Point(20, 140), Width = 250 };
-            cmbPaymentMethod = new ComboBox
-            {
-                Location = new Point(20, 180),
-                Width = 250,
-                DropDownStyle = ComboBoxStyle.DropDownList,
-                Items = { "Transfer Bank", "Kartu Kredit" }
-            };
-            btnSubmit = new Button { Text = "Daftar", Location = new Point(20, 220), Width = 250 };
+            txtName = new TextBox();
+            txtOrigin = new TextBox();
+            cmbDepartment = new ComboBox();
+            txtBank = new TextBox();
+            cmbPaymentMethod = new ComboBox();
+            btnSubmit = new Button();
+            SuspendLayout();
 
+            // txtName
+            txtName.Location = new Point(0, 0);
+            txtName.Name = "txtName";
+            txtName.Size = new Size(100, 27);
+            txtName.TabIndex = 0;
+
+            // txtOrigin
+            txtOrigin.Location = new Point(0, 0);
+            txtOrigin.Name = "txtOrigin";
+            txtOrigin.Size = new Size(100, 27);
+            txtOrigin.TabIndex = 1;
+
+            // cmbDepartment
+            cmbDepartment.Location = new Point(0, 0);
+            cmbDepartment.Name = "cmbDepartment";
+            cmbDepartment.Size = new Size(121, 28);
+            cmbDepartment.TabIndex = 2;
+
+            // txtBank
+            txtBank.Location = new Point(0, 0);
+            txtBank.Name = "txtBank";
+            txtBank.Size = new Size(100, 27);
+            txtBank.TabIndex = 3;
+
+            // cmbPaymentMethod
+            cmbPaymentMethod.Location = new Point(0, 0);
+            cmbPaymentMethod.Name = "cmbPaymentMethod";
+            cmbPaymentMethod.Size = new Size(121, 28);
+            cmbPaymentMethod.TabIndex = 4;
+
+            // btnSubmit
+            btnSubmit.Location = new Point(0, 0);
+            btnSubmit.Name = "btnSubmit";
+            btnSubmit.Size = new Size(75, 23);
+            btnSubmit.TabIndex = 5;
             btnSubmit.Click += btnSubmit_Click;
 
-            Controls.AddRange(new Control[]
-            {
-        txtName, txtOrigin, cmbDepartment, txtBank, cmbPaymentMethod, btnSubmit
-            });
-
-            this.Text = "Form Pendaftaran Mahasiswa";
-            this.ClientSize = new Size(300, 280);
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
+            // ApplicantForm
+            ClientSize = new Size(503, 148);
+            Controls.Add(txtName);
+            Controls.Add(txtOrigin);
+            Controls.Add(cmbDepartment);
+            Controls.Add(txtBank);
+            Controls.Add(cmbPaymentMethod);
+            Controls.Add(btnSubmit);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            Name = "ApplicantForm";
+            Text = "Form Pendaftaran Mahasiswa";
+            ResumeLayout(false);
+            PerformLayout();
         }
         #endregion
     }
