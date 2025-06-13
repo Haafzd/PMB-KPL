@@ -1,4 +1,4 @@
-﻿namespace PMB
+namespace PMB
 {
     class Program
     {

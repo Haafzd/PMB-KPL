@@ -1,4 +1,6 @@
-﻿using API.Models;
+using System.Net;
+using API.Models;
+
 using API.Services;
 using Lib.Utils;
 
@@ -6,6 +8,7 @@ namespace PMB
 {
     public class PMBMenu
     {
+
         private static bool _isLoggedIn = false;
         private static string _currentUser = "";
         private static readonly PMBClient _client = new();
@@ -79,6 +82,7 @@ namespace PMB
             Console.WriteLine(result.IsSuccess ? "Registrasi berhasil!" : $"Gagal: {result.ErrorMessage}");
             Console.ReadKey();
         }
+
         private static async Task ShowMainMenu()
         {
             while (true)
