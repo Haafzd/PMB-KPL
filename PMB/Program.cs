@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
@@ -118,3 +119,15 @@ class Program
         }
     }
 }
+=======
+﻿namespace PMB
+{
+    class Program
+    {
+        static async Task Main(string[] args)
+        {
+            await PMBMenu.Run();
+        }
+    }
+}
+>>>>>>> dbef6d44cfca0ebf4965c3c099ba0e01e83aa7ea
