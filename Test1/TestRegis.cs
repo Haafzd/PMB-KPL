@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Controllers;
 using API.Models.StateMachine;
 using API.Services;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace Test1
 {
