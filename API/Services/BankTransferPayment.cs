@@ -18,16 +18,18 @@ namespace API.Services
         {
             PaymentValidator.ValidateAmount(amount);
 
-            // Simulasi proses transfer bank
             Console.WriteLine($"sedang memproses kepada bank dengan besaran {amount:C} kepada akun {BankAccount}.");
-            return true; // misal pembayaran berhasil
+
+            return true;
         }
 
         public async Task<bool> ProcessPaymentAsync(string bankAccount, decimal amount)
         {
-            await Task.Delay(1000); // Simulasi delay
+            await Task.Delay(1000);
+
             var paymentProcessor = new PaymentProcessor<IPaymentMethod>(this);
             var paymentExecute = paymentProcessor.ExecutePayment(amount);
+
             return true;
         }
     }

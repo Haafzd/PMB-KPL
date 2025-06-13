@@ -1,5 +1,3 @@
-using System;
-using System.Windows.Forms;
 using API.Services;
 
 namespace View
@@ -50,5 +48,4 @@ namespace View
             new LoginForm().Show();
         }
     }
-
 }

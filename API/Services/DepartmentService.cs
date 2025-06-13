@@ -62,8 +62,6 @@ namespace API.Services
             return null;
         }
 
-
-
         public void DecreaseQuota(string departmentId)
         {
             if (_quota.ContainsKey(departmentId) && _quota[departmentId] > 0)

@@ -18,15 +18,17 @@ namespace API.Services
         {
             PaymentValidator.ValidateAmount(amount);
 
-            // Simulasi proses pembayaran dengan kartu kredit
+
             Console.WriteLine($"Pembayaran dengan nominal  {amount:C} menggunakan kartu ini" +
                 $" {CardNumber}.");
-            return true; // misal pembayaran berhasil
+
+            return true;
         }
 
         public async Task<bool> ProcessPaymentAsync(string cardNumber, decimal amount)
         {
-            await Task.Delay(1000); // Simulasi delay
+            await Task.Delay(1000);
+
             var paymentProcessor = new PaymentProcessor<IPaymentMethod>(this);
             var paymentExecute = paymentProcessor.ExecutePayment(amount);
 

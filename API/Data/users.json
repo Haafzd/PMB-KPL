@@ -6,5 +6,9 @@
   {
     "Email": "string",
     "PasswordHashWithSalt": "EaRFnaOGb\u002BpVaxbTIbsLPKrwemAYUn6YpAtVcMDh7avaNbNt"
+  },
+  {
+    "Email": "habib@a.c",
+    "PasswordHashWithSalt": "kt/xnsWyc8LX0fPt2AQgXhMpI/\u002BtwjzVQCsxKAH33ABu5Nqa"
   }
 ]
