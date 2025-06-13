@@ -1,10 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PMB.Models;
-using PMB.Services;
-using PMB.Security;
-using PMB.StateMachine;
-using System;
-using System.Collections.Generic;
+﻿using API.Models;
+using API.Services;
+using API.Models.StateMachine;
 
 namespace PMB.Tests
 {
@@ -30,6 +26,5 @@ namespace PMB.Tests
             Assert.IsTrue(result);
             Assert.AreEqual(LoginState.Authenticated, fsm.CurrentState);
         }
-
     }
 }

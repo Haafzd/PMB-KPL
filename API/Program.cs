@@ -1,32 +1,32 @@
 // Program.cs
 using API.Models;
-using Microsoft.EntityFrameworkCore;
+using API.Models.Reporting;
+using API.Services;
 using Microsoft.Extensions.Options;
-using PMB.Models;
-using PMB.Reporting;
-using PMB.Services;
+using System.Net;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Konfigurasi settings
 builder.Services.Configure<QuotaConfig>(builder.Configuration.GetSection("QuotaConfig"));
 builder.Services.Configure<ReportFormatConfig>(builder.Configuration.GetSection("ReportFormat"));
-
-// Registrasi services
-builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<QuotaConfig>>().Value);
-builder.Services.AddScoped<DepartmentQuotaService>();
+builder.Services.AddSingleton<UserService>();
 
 
-builder.Services.AddScoped<ReportGenerator>(provider =>
-    new ReportGenerator(provider.GetRequiredService<IOptions<ReportFormatConfig>>().Value));
+builder.Services.AddScoped<ReportGenerator>();
 
 // Registrasi PaymentProcessor dengan factory
-builder.Services.AddScoped<PaymentProcessor<BankTransferPayment>>(provider =>
-    new PaymentProcessor<BankTransferPayment>(new BankTransferPayment("")));
+builder.Services.AddScoped<IPaymentMethod>(provider =>
+    new BankTransferPayment("default config or get from Configuration"));
+
 
 // Registrasi dependencies lainnya
-builder.Services.AddScoped<DepartmentRuleLoader>();
-builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddHttpClient<PMBClient>();
+builder.Services.AddScoped<IApplicantService, ApplicantService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+
+
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();

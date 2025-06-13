@@ -4,7 +4,7 @@ using API.Services;
 using API.Models.StateMachine;
 using Lib.Utils;
 using Microsoft.AspNetCore.Identity;
-//cotroller regis
+
 namespace API.Controllers
 {
     [ApiController]

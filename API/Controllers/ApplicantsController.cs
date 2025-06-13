@@ -1,38 +1,70 @@
-﻿using API.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PMB.Models;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using API.Models;
+using API.Services;
 
-namespace API
+namespace API.Controllers
 {
-    /// Controller untuk manajemen data pelamar
     [ApiController]
     [Route("api/[controller]")]
-    public class ApplicantsController : ControllerBase
+    public class ApplicantController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IApplicantService _applicantService;
+        private readonly IDepartmentService _departmentService;
 
-        public ApplicantsController(AppDbContext context)
+        public ApplicantController(
+            IApplicantService applicantService,
+            IDepartmentService departmentService)
         {
-            _context = context;
+            _applicantService = applicantService;
+            _departmentService = departmentService;
         }
 
-        // GET: Mengambil semua data pelamar
         [HttpGet]
-        public ActionResult<IEnumerable<Applicant>> GetApplicants()
+        [ProducesResponseType(typeof(List<Applicant>), 200)]
+        public ActionResult<List<Applicant>> GetAll() => _applicantService.GetAllApplicants();
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Applicant), 200)]
+        [ProducesResponseType(404)]
+        public ActionResult<Applicant> GetById(int id)
         {
-            return ((DbSet<PMB.Models.Applicant>)_context.Applicants).ToList();
+            var applicant = _applicantService.GetApplicantById(id);
+            if (applicant == null)
+                return NotFound();
+            return Ok(applicant);
         }
 
-        // POST: Membuat data pelamar baru
         [HttpPost]
-        public ActionResult<Applicant> CreateApplicant([FromBody] Applicant applicant)
+        [ProducesResponseType(typeof(Applicant), 201)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> Create([FromBody] Applicant applicant)
         {
-            _context.Applicants.Add(applicant);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetApplicants), applicant);
+            var validationApplication = _departmentService.ValidateApplicant(applicant);
+            var validationError = _departmentService.GetApplicantValidationReason(applicant);
+            if (validationError != null)
+                return BadRequest(validationError);
+
+            var fee = _departmentService.GetFeeByDepartment(applicant.DepartmentId);
+            if (fee == null || fee <= 0)
+                return BadRequest("Biaya jurusan tidak ditemukan atau belum diatur.");
+
+            var paymentMethod = PaymentFactory.CreatePaymentMethod(applicant.PaymentMethod, applicant.BankAccount);
+            var processor = new PaymentProcessor<IPaymentMethod>(paymentMethod);
+
+            bool paymentSuccess;
+            try
+            {
+                paymentSuccess = await paymentMethod.ProcessPaymentAsync(applicant.BankAccount, fee.Value);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Pembayaran gagal: {ex.Message}");
+            }
+
+            _applicantService.AddApplicant(applicant);
+            _departmentService.DecreaseQuota(applicant.DepartmentId);
+
+            return CreatedAtAction(nameof(GetById), new { id = applicant.Id }, applicant);
         }
     }
 }

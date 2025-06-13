@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PMB.StateMachine
+﻿namespace API.Models.StateMachine
 {
     public enum LoginState
     {
@@ -15,5 +15,3 @@ namespace PMB.StateMachine
         Locked
     }
 }
-
-    

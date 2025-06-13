@@ -1,37 +1,45 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PMB.Models;
-using PMB.Services;
-using System.Linq;
+using API.Services;
 
-namespace API
+namespace API.Controllers
 {
-
-    // PMB-API/Controllers/PaymentController.cs
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : ControllerBase
     {
-        // POST: api/payment/bank-transfer
-        [HttpPost("bank-transfer")]
-        public IActionResult ProcessBankTransfer([FromBody] BankTransferPaymentRequest request)
+        [HttpPost("process")]
+        public async Task<IActionResult> ProcessPayment([FromBody] PaymentRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.Method) || string.IsNullOrWhiteSpace(request.Account))
+                return BadRequest("Metode dan akun pembayaran wajib diisi.");
+
+            if (request.Amount <= 0)
+                return BadRequest("Jumlah pembayaran harus lebih dari 0.");
+
             try
             {
-                var paymentMethod = new BankTransferPayment(request.BankAccount);
-                var processor = new PaymentProcessor<BankTransferPayment>(paymentMethod);
-                var result = processor.ExecutePayment(request.Amount);
-                return Ok(new { Success = result });
+                var paymentMethod = PaymentFactory.CreatePaymentMethod(request.Method, request.Account);
+                var success = await paymentMethod.ProcessPaymentAsync(request.Account, request.Amount);
+
+                if (success)
+                {
+                    Console.WriteLine($"[INFO] Pembayaran berhasil dengan metode {request.Method} ke akun {request.Account} sebesar {request.Amount:C}.");
+                    return Ok(new { Berhasil = true, Pesan = "Pembayaran berhasil." });
+                }
+
+                return BadRequest("Pembayaran gagal diproses.");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Terjadi kesalahan: {ex.Message}");
             }
         }
     }
 
-    public class BankTransferPaymentRequest
+    public class PaymentRequest
     {
-        public string BankAccount { get; set; }
+        public string Method { get; set; }
+        public string Account { get; set; }
         public decimal Amount { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+
 namespace Lib.Utils
 {
     public static class InputHelper
@@ -8,6 +9,7 @@ namespace Lib.Utils
             Console.Write(label);
             return Console.ReadLine() ?? "";
         }
+
         public static bool ValidateEmail(string email)
         {
             string pattern = @"^[^\s@]+@[^\s@]+\.[^\s@]+$";
